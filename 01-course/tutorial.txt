@@ -1,0 +1,79 @@
+------------------
+MAVEN
+    é um gerenciador de depedencias que agiliza o processo de instalação e compatibilidade de versões automaticamente
+    o maven faz a leitura da depedencia no pom.xml e realiza a instalação remotamente.
+    Maven também possui um repositório local na sua maquina que armazena informações dos pacotes de depedencias em forma de cache.
+    caso a importação da depedencia já exista, o maven utiliza o cache se nao, ele faz a instalação remotamente.
+------------------
+
+------------------
+/mvnw
+/mvnw.cmd
+
+    Esses arquivos sao chamados de maven wrapper, permite rodar maven mesmo que ele nao esteja instalado no sistema.
+    e garante que a versão do maven esteja correta no seu projeto
+    use o comando mvnw.cmd clean install para instalar maven no sistema
+    Após isso voce pode usar tanto mvnw ou mvn porque depois usar o comando o maven é instaldo remotamente no seu sistema
+-------------------
+
+------------------
+/APLICATION.PROPERTIES
+
+    são as configurações que voce pode adicionar no seu projeto, ex:
+    server.port=8585
+
+    * configurações de banco de dados.
+    * pode definir variaveis customizadas
+
+
+    # como injetar variaveis definiada no application.properties
+
+    definimos assim:
+    coach.name = John Doe
+
+
+    # e em um classe podemos injetar dessa maneira:
+
+    //@Value("${coach.name}")
+    private String coachName;
+
+------------------
+/static
+
+    local definido para colocar arquivos estáticos (html, css, images)
+------------------
+
+------------------
+/templates
+
+    a pasta templates é reservada para templates engines
+    são templates engines para rodar html corretamente e visualizar nos browsers 
+    o maven disponibiliza essa pasta template para configurar templates engines
+    caso queira inserir dados do seu projeto backend na página estática, vai precisar de um template engine para fazer isso.
+    e para renderizar a pagina caso um valor atualize, recarregar a pagina ou usar AJAX
+
+------------------
+
+
+------------------
+/test
+    pasta reservada para testes funcionais, unitários de integração
+------------------
+
+
+------------------
+como buildar e rodar sua aplicação
+------------------
+    vá até o diretório do seu projeto e no terminal acesse-o
+        cd D:\users\projeto
+    
+    mvnw ou mvn se tiver maven instalado
+        mvnw package
+
+    vai criar um arquivo na pastar /target/<nome-do-projeto>-<versão-do-projeto>.SNAPSHOT.jar
+    ou seja /target/01-course-0.0.1-SNAPSHOT.jar  
+
+    depois...
+        java -jar target\01-course-0.0.1-SNAPSHOT.jar
+    ou...
+        mvnw spring-boot:run (no diretório do projeto)
