@@ -70,10 +70,124 @@ como buildar e rodar sua aplicação
     mvnw ou mvn se tiver maven instalado
         mvnw package
 
-    vai criar um arquivo na pastar /target/<nome-do-projeto>-<versão-do-projeto>.SNAPSHOT.jar
-    ou seja /target/01-course-0.0.1-SNAPSHOT.jar  
+    vai ser criado um arquivo na pastar /target/<nome-do-projeto-e-versão>.SNAPSHOT.jar
+    ou seja a saída fica em /target/01-course-0.0.1-SNAPSHOT.jar  
 
     depois...
         java -jar target\01-course-0.0.1-SNAPSHOT.jar
     ou...
         mvnw spring-boot:run (no diretório do projeto)
+
+
+
+
+Anotations
+------------------
+@Component 
+
+marca a classe como um Bean do spring
+Bean é uma classe regular que é gerenciadada pelo spring
+também faz a classe ficar disponivel para injeção de depedencia
+
+
+
+adicionado outros pacotes fora do pacote princial
+------------------
+no metodo principal do spring a anotação @SpringBootApplication faz o scan de todos os pacotes e subpacotes
+e classes que estão dentro do projeto e registra todos os beans que estão dentro do projeto.
+caso um arquivo esteja fora do pacote princial podemos usar uma anotação para registrar outros pacotes.
+OBS: repare que usando o nomo scan, deve colocar a pasta principal do projeto e os outros pacotes que deseja registrar.
+@SpringBootApplication(scanBasePackages={"com.SpringBoot.util","com.SpringBoot.test", "com.SpringBoot.course"})
+
+------------------
+
+IOC
+------------------
+Inversão de controle
+
+
+Em uma aplicação Java típica, as classes frequentemente dependem de outras classes, objetos ou serviços para executar suas funções.
+Essas dependências podem ser desafiadoras de gerenciar quando as próprias classes são responsáveis ​​por criá-las ou adquiri-las.
+A injeção de dependências resolve esse problema invertendo o controle da criação e do gerenciamento de dependências.
+Em vez de uma classe criar suas próprias dependências, as dependências são fornecidas ou "injetadas" de uma fonte externa.
+Essa fonte externa pode ser um arquivo de configuração, um contêiner ou outra classe.
+
+Spring é um framework que implementa o padrão IOC nativamente.
+
+------------------
+
+------------------
+@qualifier 
+é uma anotação que serve para diferenciar dois beans que possuem o mesmo tipo.
+quando temos dois beans do mesmo tipo, o spring não sabe qual injetar, então usamos o @qualifier para diferenciar.
+
+    @Autowired
+    @Qualifier("bean1")
+    private Coach coach;
+
+podemos utilizar o @Primary para definir um bean principal, ou seja, o spring vai injetar esse bean quando não for definido o @qualifier.
+    @Primary
+    @Bean
+    public Coach coach1() {
+        return new Coach();
+    }
+
+------------------
+
+
+------------------
+@Lazy
+    é uma anotação que serve para inicializar o bean apenas quando ele for chamado.
+    ou seja, o spring não inicializa o bean na inicialização da aplicação, ele espera ser chamado.
+    isso é útil para melhorar a performance da aplicação, pois evita a inicialização de beans que não são utilizados.
+    @Lazy
+    @Bean
+    public Coach coach() {
+        return new Coach();
+    }
+
+podemos usar a anotação em application.properties
+    spring.main.lazy-initialization=true
+    ou seja, todos os beans serão inicializados apenas quando forem chamados.
+------------------
+
+------------------
+beans, componentes serviços ...
+
+como é o scopo de um bean?
+default scope é [singleton], ou seja, o spring cria apenas uma instância do bean e compartilha essa instância em toda a aplicação. é feito cache me memória
+e todas as injeções de dependência vão ser a mesma instância.
+
+temos o [prototype] que cria uma nova instância do bean toda vez que ele é chamado.
+temos o [request] que cria uma nova instância do bean toda vez que uma requisição é feita.
+temos o [session] que cria uma nova instância do bean toda vez que uma sessão é criada.
+temos o [application] que cria uma nova instância do bean toda vez que a aplicação é iniciada.
+temos o [websocket] que cria uma nova instância do bean toda vez que um websocket é criado.
+
+para mudar o scopo use a anotação @Scope
+    @Scope("prototype")
+    @Component
+    public class Coach {
+        // código do bean
+    }
+
+------------------
+Life cycle de um bean
+
+
+a anotação @PostConstruct é chamada após a injeção de dependência, ou seja, após o bean ser criado e as dependências serem injetadas.
+a anotação @PreDestroy é chamada antes do bean ser destruído, ou seja, antes da aplicação ser finalizada.
+
+    @PostConstruct
+    public void init() {
+        System.out.println("Bean criado");
+    }
+
+    @PreDestroy
+    public void destroy() {
+        System.out.println("Bean destruído");
+    }
+    o preDestroy é chamado quando a aplicação é finalizada, ou seja, o bean é destruído.
+
+    o @RequestScope é chamado toda vez que uma requisição é feita, ou seja, o bean é criado e destruído a cada requisição.
+------------------
