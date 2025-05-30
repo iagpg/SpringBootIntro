@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 
 
+
 @RestController
 public class Web {
 
@@ -43,6 +44,6 @@ public class Web {
     public String getMethodName() {
         return notifications.Message();
     }
-    
+       
     
 }

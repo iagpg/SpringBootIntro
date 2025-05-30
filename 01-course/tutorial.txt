@@ -191,3 +191,30 @@ a anotação @PreDestroy é chamada antes do bean ser destruído, ou seja, antes
 
     o @RequestScope é chamado toda vez que uma requisição é feita, ou seja, o bean é criado e destruído a cada requisição.
 ------------------
+
+
+------------------
+@Configuration 
+é uma anotação que indica que a classe é uma classe de configuração do Spring.
+ela é usada para definir beans e configurações do Spring.
+os metodos com @Bean dentro de uma classe com @Configuration são chamados de métodos de configuração.
+    @Configuration
+    public class AppConfig {
+        @Bean
+        public Coach coach() {
+            return new Coach();
+        }
+    }
+
+    o @Bean é usado para definir um bean, ou seja, uma instância de uma classe que será gerenciada pelo Spring.
+    o Spring vai chamar o método coach() e registrar o bean no contexto da aplicação.
+
+    podemos usar o @ComponentScan para escanear pacotes e registrar os beans automaticamente.
+    @ComponentScan("com.SpringBoot.course")
+------------------
+
+------------------
+HIBERNATE
+    Hibernate é um framework de mapeamento objeto-relacional (orm) que facilita a interação entre aplicações java e banco de dados relacionais.
+    
+------------------
