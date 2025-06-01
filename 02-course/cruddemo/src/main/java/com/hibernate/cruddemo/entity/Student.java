@@ -1,10 +1,17 @@
 package com.hibernate.cruddemo.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 @Entity
 @Table(name = "student")
 public class Student {
     
-    @id
+    @Id
     // means that the db will handle the generation of the id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -19,12 +26,18 @@ public class Student {
     @Column(name = "email")
     private String email;
 
+    // for some reason we need a no-args constructor
+    // this is required by Hibernate to create an instance of the class
+    @SuppressWarnings("unused")
+    private Student(){}
+
     public Student(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
     }
 
+    
     public String getFirstName() {
         return firstName;
     }
@@ -47,6 +60,21 @@ public class Student {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+
+    public int getId() {
+        return id;
+    }
+
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Student [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + "]";
     }
 
    
