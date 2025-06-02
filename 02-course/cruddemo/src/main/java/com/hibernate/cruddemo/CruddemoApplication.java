@@ -25,13 +25,13 @@ public class CruddemoApplication {
 			System.out.println("CommandLineRunner running... ");
 			
 			//createStudent(studentDAO);
-			//createMultipleStudents(studentDAO);
+			createMultipleStudents(studentDAO);
 			//findStudent(studentDAO);
 			//findAllStudents(studentDAO);
 			//findStudentLastName(studentDAO,"Jackson");
 			//updateStudent(studentDAO);
 			//removeStudent(studentDAO,5);
-			removeAllStudents(studentDAO);
+			//removeAllStudents(studentDAO);
 			 
 
 			

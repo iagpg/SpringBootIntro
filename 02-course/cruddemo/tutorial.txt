@@ -235,3 +235,12 @@ JPA > java persistence API
     o JPA é usado pelo Hibernate para mapear objetos Java para tabelas do banco de dados e vice-versa.
     o JPA é uma especificação, ou seja, é implementado por diferentes frameworks, como o Hibernate.
 ------------------
+
+
+
+------------------
+Hibernate ddl auto Configuration
+    por default none é aplicado. 
+    "create" -> remove as tabelas do banco e cria novamente
+    "create-drop" -> remove as tabelas do banco e cria novamente, mas ao finalizar a aplicação, as tabelas são removidas, muito util para testes unitários 
+    "update" -> atualiza as tabelas do banco de dados, ou seja, adiciona novas colunas, remove colunas que não existem mais, mas não remove as tabelas.
