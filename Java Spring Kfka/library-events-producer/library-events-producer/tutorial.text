@@ -1,0 +1,17 @@
+kafka templates
+
+
+
+how it works
+
+[kafka template] Send() -> Serializer -> Partitioner => Record Accumulator(buffer) -> kafka library events (goes to the kafka topics)
+
+
+
+Configuration
+    #Mandatory
+    bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+    key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
+    value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+    
