@@ -1,8 +1,152 @@
-kafka templates
+first go to this folder then turn on the Docker
+after that, use this command to initialize the containers
+
+command:
+docker-compose up
+
+after the installation and initialization of the containers. Acess the 
+
+
+#this command is used to acess the Kafka container as a bash shell
+docker exec -it kafka1 bash
+
+#to create a topic in kafka we can run this command
+
+#the 19092 is the port of kafka in the docker-compose.yml file
+#this command will create a topic named "test-topic" with 1 partition and a replication factor of 1
+kafka-topics --bootstrap-server localhost:19092 \
+  --create \
+  --topic test-topic \
+  --replication-factor 1 \
+  --partitions 1
+    -> Created topic test-topic.
+
+
+# to visualize the topics in kafka we can run this command
+  docker exec -it kafka1 kafka-topics --bootstrap-server localhost:19092 --list
+    -> test-topic
+
+
+#to send messages as a producer using the topic created we can run this command
+    docker exec -it kafka1 kafka-console-producer --bootstrap-server localhost:19092 --topic test-topic
+
+#it will open a console where we can type messages and send them to the topic
+
+#to consume the messages from the topic we can run this command
+#OBS the command --from-beginning will show older messages in the topic
+    docker exec -it kafka1 kafka-console-consumer --bootstrap-server localhost:19092 --topic test-topic --from-beginning
+#it will open a console where we can see the messages sent to the topic
+
+
+#more details about producer:
+    #when we are sending messages, first the producer pass the message to the Partitioner, whick is responsible for deciding which partition the message will go to.
+    #and also, it will check if the value has a key, which will determined which partition the message will go to.
+    #REMEMBER: if we are considering ordering the messages, we need to use keys, otherwise the messages can go to different partitions and the order will not be guaranteed.
+
+
+#producer with key example:
+    docker exec -it kafka1 kafka-console-producer --bootstrap-server localhost:19092 --topic test-topic --property "key.separator=-" --property "parse.key=true"
+
+#consumer with key example:
+    docker exec -it kafka1 kafka-console-consumer --bootstrap-server localhost:19092  --from-beginning --topic test-topic --property "key.separator= - " --property "print.key=true"
+
+
+# show partition [no group]
+docker exec -it kafka1 kafka-console-producer --bootstrap-server localhost:19092 --topic test-topic --property print.partition=true
+docker exec -it kafka1 kafka-console-consumer --bootstrap-server localhost:19092 --topic test-topic --from-beginning --property print.partition=true
+
+# with group
+docker exec -it kafka1 kafka-console-producer --bootstrap-server localhost:19092 --topic test-topic --property print.partition=true
+docker exec -it kafka1 kafka-console-consumer --bootstrap-server localhost:19092 --group console-consumer-74056 --topic test-topic --from-beginning --property print.partition=true
+
+
+docker exec -it kafka1 kafka-console-producer --bootstrap-server localhost:19092 --topic test-topic --property "parse.key=true" --property "key.separator=:" --property "print.partition=true"
+docker exec -it kafka1 kafka-console-consumer --bootstrap-server localhost:19092 --group console-consumer-74056 --topic test-topic --property "parse.key=true" --property "key.separator=:" --property print.partition=true
+
+docker exec -it kafka1 kafka-console-consumer --bootstrap-server localhost:19092 --group console-consumer-74056 --topic test-topic --property "parse.key=true" --property "key.separator=:" --property "print.partition=true"
+
+#in this case we use for example a-name, so "a" will be the key and "name" will be the value, so we can use the key to determine which partition the message will go to.
+
+
+#keys
+    #keys are used to determine which partiion te message will go to.
+
+#group id
+    # group id is used to determine which consumer group the consumer belongs to
+    # if a send a event to a topic, the message will replicate to all the partitions associated to this topic, but if we run a consumer with a especific group id, the message will go to the one partition with the group id
+    # how it is distribuited? kafka uses the algorithm of round robin, i means that the messages will be automatically handled by kafka, sending messages to the consumers equally with the same group id. 
+    # example: if we have a test-topic with 4 partitions and 2 consumers with the same group id, the messages will be distributed between the consumers.basically group id is essentinal to scale the messages consumption.
+    # to define a group we write --group [name of the group id]
+
+
+#kafka consumer groups list
+    docker exec -it kafka1 kafka-consumer-groups --bootstrap-server kafka1:19092 --list 
+    #to show active consumers, you have to run consumer with:
+    docker exec -it kafka1 kafka-console-consumer --bootstrap-server localhost:19092 --topic test-topic
+
+    -> console-consumer-74056
+
+    docker exec -it kafka1 kafka-console-consumer --bootstrap-server kafka1:19092 \ --topic test-topic --group console-consumer-74056 --property "key.separator= - " --property "print.key=true"
+    
+
+# shows the available topics, partitions -- information
+ docker exec -it kafka1 kafka-topics --bootstrap-server kafka1:19092 --describe --topic test-topic
+
+# add partitions to a especific topic
+ docker exec -it kafka1  kafka-topics --bootstrap-server kafka1:19092 --alter --topic test-topic --partitions 2
+
+# by default events created have a lifetime of 168 hours (7 days), so when a event is trigged, the broke create a log to catalog it. the messages will be available until consumed. after consumed, and after the default time, the logs will be deleted
+
+#to configure the retantion time:
+
+docker exec -it kafka1 bash
+cd etc/kafka
+#to see the directories
+dir
+#acess the configuration folder
+cat server.properties    
+log.retention.hours=168
+
+#to check out the logs created, go on 
+cd /var/lib/kafka/data/
+dir
+
+
+#how it works in more details
+
+#1 producer sends th event to a topic
+#2 the topic is divided by partitions
+#3 the broker recieves the event
+#4 the broker will determine which partition the event will go to (if a key is set) or to a random one (if a group id is setted)
+#5 a log is created with all information about the event on the cluster
+#6 a consumer from the related group subscribe the topic (remember that consumer is attached to a topic) and verify the events related to the topic
+#7 kafka distribute the events to related consumers groups
+#8 consumers lisen and do the operation the consumers have consumed the events.
+
+
+#cluster
+#one cluster have one or more brokers
+#sometimes one broker isnt enough to deal with all data that were requested by producers and consumers
+#if one brokers is overloaded zooekeeper which is the manager of the cluster, will handle the logs and move to another broker, this is done by configuring the data replication to another broker
 
 
 
-how it works
+#replication.factor
+#represents the number of brookers that will have data replicated across others brokers
+
+[MUTLIPLE BROKERS]
+#where we are using broker1(kafka1) to create a topic called test-topic with 3 partitions and setting 3 copies of each partition data over 3 brokers existent
+    docker exec -it kafka1 kafka-topics --bootstrap-server kafka1:19092 --create --topic test-topic --replication-factor 3 --partitions 3
+# to verify the topics with the parititions and replicas information
+    docker exec -it kafka1 kafka-topics --bootstrap-server kafka1:19092 --describe --topic test-topic
+
+# setting producer to trigger event to 3 brokers
+docker exec -it kafka1 kafka-console-producer --bootstrap-server localhost:9092,kafka2:19093,kafka3:19094 --topic test-topic
+
+# instanciating consumers to lisen to the 3 brokers
+docker exec -it kafka1 kafka-console-consumer --bootstrap-server localhost:9092,kafka2:19093,kafka3:19094 --topic test-topic --from-beginning
+
+
 
 [kafka template] Send() -> Serializer -> Partitioner => Record Accumulator(buffer) -> kafka library events (goes to the kafka topics)
 
