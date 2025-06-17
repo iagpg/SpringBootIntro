@@ -56,7 +56,6 @@ public class LibraryEventsProducer {
         var value = objectMapper.writeValueAsString(libraryEvent);
 
         var producerRecord =BuildProducerRecord(key,value);
-        
         var completableFuture = kafkaTemplate.send(producerRecord);
 
         return completableFuture.whenComplete((sendResult, throwable) -> {
@@ -83,7 +82,7 @@ public class LibraryEventsProducer {
     private ProducerRecord<Integer,String> BuildProducerRecord(Integer key, String value) {
 
         List<Header> recordHeaders = List.of(new RecordHeader("event-source","scanner".getBytes()));
-       return new ProducerRecord<>( this.topic, null, key, value, recordHeaders);
+        return new ProducerRecord<>( this.topic, null, key, value, recordHeaders);
    }
 
     public void handleFailure(Integer key, String value, Throwable throwable){

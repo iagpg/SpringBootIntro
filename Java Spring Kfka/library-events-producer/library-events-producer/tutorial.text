@@ -162,4 +162,28 @@ Configuration
 
 after configuring the mandatory configs
 
-auto
+
+
+acks in kafka
+
+acks = 0,1 and -1(all)
+    #0: producer will not wait for any acknowledgment from the broker, it will send the message and continue (this is not recommended, the producer will not know if the message was sent successfully or not)
+    #1: producer will wait for the leader broker to acknowledge the message, but not the replicas
+    #-1: producer will wait for all replicas to acknowledge the message, this is the safest option, but it can be slower
+
+    the difference between 1 and -1:
+    1 - the producer will not wait for the replicas to acknowledge the message, so if the leader broker fails before the replicas acknowledge the message, the message can be lost.
+    -1 - the producer will wait for all replicas to acknowledge the message, so if the leader broker fails before the replicas acknowledge the message, the message will NOT be lost.
+
+retries value = [0, -2147483647]
+in kafka the default value is 2147483647, which means that the producer will retry sending the message until it is successful, but this can cause a lot of retries and can lead to performance issues.
+    #0: the producer will not retry sending the message if it fails
+    #-1: the producer will retry sending the message until it is successful, but this can cause performance issues
+
+    #the best practice is to set a value between 1 and 10, so the producer will retry sending the message a few times before giving up.
+
+
+
+Spring kafka consumer
+
+MessageListenerContainer

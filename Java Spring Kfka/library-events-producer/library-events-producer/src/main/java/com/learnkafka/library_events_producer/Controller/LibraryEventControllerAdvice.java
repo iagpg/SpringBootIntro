@@ -1,6 +1,5 @@
 package com.learnkafka.library_events_producer.Controller;
 
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
