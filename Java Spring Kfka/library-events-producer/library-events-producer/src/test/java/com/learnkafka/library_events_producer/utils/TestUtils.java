@@ -1,4 +1,4 @@
-package com.learnkafka.library_events_producer.unit;
+package com.learnkafka.library_events_producer.utils;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;

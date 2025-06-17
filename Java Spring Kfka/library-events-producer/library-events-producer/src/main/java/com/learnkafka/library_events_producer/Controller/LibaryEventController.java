@@ -6,6 +6,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.learnkafka.library_events_producer.domain.LibraryEvent;
 import com.learnkafka.library_events_producer.producer.LibraryEventsProducer;
 
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +22,9 @@ public class LibaryEventController {
     private LibraryEventsProducer libraryEventProducer;
 
 
-
-
-
     @PostMapping("/v1/libraryevent")
     @Transactional
-    public ResponseEntity<LibraryEvent> postLibraryEvent(@RequestBody LibraryEvent libraryEvent) throws JsonProcessingException {
+    public ResponseEntity<LibraryEvent> postLibraryEvent(@RequestBody @Valid LibraryEvent libraryEvent) throws JsonProcessingException {
 
         libraryEventProducer.sendLibraryEventAsync_approach2(libraryEvent);
         System.out.println(libraryEvent);

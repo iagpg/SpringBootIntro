@@ -13,7 +13,6 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -30,7 +29,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learnkafka.library_events_producer.domain.LibraryEvent;
-import com.learnkafka.library_events_producer.unit.TestUtils;
+import com.learnkafka.library_events_producer.utils.TestUtils;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -83,6 +82,6 @@ public class LibraryEventControllerIntegrationTest {
             assertEquals(libraryEventActual,TestUtils.libraryEventRecord());
             }
         );
-        
+            
     }
 }
