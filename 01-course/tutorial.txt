@@ -216,5 +216,5 @@ os metodos com @Bean dentro de uma classe com @Configuration são chamados de m�
 ------------------
 HIBERNATE
     Hibernate é um framework de mapeamento objeto-relacional (orm) que facilita a interação entre aplicações java e banco de dados relacionais.
-    
+    para se comunicar com o banco de dados temos o JDBC que é uma api que se comunica com o banco de dados. entao o JPA hibernate utiliza o JDBC para se comunicar com o banco de dados.
 ------------------
