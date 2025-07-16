@@ -1,0 +1,15 @@
+<h2>Adicionar Livro</h2>
+<form (ngSubmit)="onSubmit()">
+
+  <label>Nome do Livro:</label>
+  <input type="text" [(ngModel)]="libraryEvent.book.bookName" name="bookName" required />
+
+  <label>Autor do Livro:</label>
+  <input type="text" [(ngModel)]="libraryEvent.book.bookAuthor" name="bookAuthor" required />
+
+  <button type="submit">Adicionar</button>
+</form>
+
+
+<p *ngIf="successMessage" class="success-message">{{ successMessage }}</p>
+<p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
